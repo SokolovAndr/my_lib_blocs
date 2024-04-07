@@ -9,3 +9,10 @@ class StateA extends NavigationState {
 class StateB extends NavigationState {
   final int index = 1;
 }
+
+class StateC extends NavigationState {
+  final int index = 2;
+}
+class StateD extends NavigationState {
+  final int index = 3;
+}

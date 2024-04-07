@@ -7,6 +7,8 @@ export 'navigation_state.dart';
 class NavigationCubit extends Cubit<NavigationState> {
   NavigationCubit() : super(StateA());
 
-  void goToAuthorsScreen() => emit(StateB());
   void goToBooksScreen() => emit(StateA());
+  void goToUsersScreen() => emit(StateB());
+  void goToAuthorsScreen() => emit(StateC());
+  void goToGenresScreen() => emit(StateD());
 }
