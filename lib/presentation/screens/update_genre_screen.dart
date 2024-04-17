@@ -51,7 +51,7 @@ class _UpdateGenreScreenState extends State<UpdateGenreScreen> {
           ElevatedButton(
             onPressed: () async  {
               if (_genreNameCtrl.text.isEmpty) {
-                snackBar(context, "Genre name cant be null");
+                snackBar(context, "Введите все данные");
               } else {
                 context.read<GenreBloc>().add(UpdateGenreEvent(context,
                     id: widget.id.toString(), name: _genreNameCtrl.text));

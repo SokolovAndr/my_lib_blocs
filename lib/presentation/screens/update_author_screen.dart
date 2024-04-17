@@ -53,7 +53,7 @@ class _UpdateAuthorScreenState extends State<UpdateAuthorScreen> {
           ElevatedButton(
             onPressed: () async  {
               if (_authorNameCtrl.text.isEmpty) {
-                snackBar(context, "Author name cant be null");
+                snackBar(context, "Введите все данные");
               } else {
                 context.read<AuthorBloc>().add(UpdateAuthorEvent(context,
                     id: widget.id.toString(), name: _authorNameCtrl.text));
