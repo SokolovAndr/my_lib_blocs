@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_lib_blocs/presentation/screens/fourth_screen.dart';
+import 'package:my_lib_blocs/presentation/screens/genres_screen.dart';
 import '../../logic/cubit/navigation_cubit.dart';
-import '../screens/home_screen.dart';
-import '../screens/second_screen.dart';
-import '../screens/third_screen.dart';
+import '../screens/books_screen.dart';
+import '../screens/users_screen.dart';
+import '../screens/authors_screen.dart';
 
 class NavigationMenuWidget extends StatelessWidget {
   const NavigationMenuWidget({super.key});
