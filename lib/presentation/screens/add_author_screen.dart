@@ -1,8 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_lib_blocs/logic/bloc/author_bloc.dart';
-
 import '../../constants/snack_bar.dart';
 import '../../logic/bloc/author_event.dart';
 import '../../logic/bloc/author_state.dart';
@@ -15,11 +13,11 @@ class AddAuthorScreen extends StatefulWidget {
 }
 
 class _AddAuthorScreenState extends State<AddAuthorScreen> {
-  final TextEditingController _userNameCtrl = TextEditingController();
+  final TextEditingController _authorNameCtrl = TextEditingController();
 
   @override
   void dispose() {
-    _userNameCtrl.dispose();
+    _authorNameCtrl.dispose();
     super.dispose();
   }
 
@@ -41,7 +39,7 @@ class _AddAuthorScreenState extends State<AddAuthorScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: TextField(
-            controller: _userNameCtrl,
+            controller: _authorNameCtrl,
             decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -53,12 +51,12 @@ class _AddAuthorScreenState extends State<AddAuthorScreen> {
           height: 15,
         ),
         ElevatedButton(onPressed: () {
-          if (_userNameCtrl.text.isEmpty) {
-            snackBar(context, "Введиет имя");
+          if (_authorNameCtrl.text.isEmpty) {
+            snackBar(context, "Введите имя");
           } else {
             context
                 .read<AuthorBloc>()
-                .add(AddAuthorEvent(name: _userNameCtrl.text, context: context));
+                .add(AddAuthorEvent(name: _authorNameCtrl.text, context: context));
           }
         }, child:
             BlocBuilder<AuthorBloc, AuthorState>(builder: (context, state) {

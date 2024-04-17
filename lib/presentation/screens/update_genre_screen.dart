@@ -1,28 +1,26 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_lib_blocs/logic/bloc/author_bloc.dart';
-
 import '../../constants/snack_bar.dart';
-import '../../logic/bloc/author_event.dart';
-import '../../logic/bloc/author_state.dart';
+import '../../logic/bloc/genre_bloc.dart';
+import '../../logic/bloc/genre_event.dart';
+import '../../logic/bloc/genre_state.dart';
 
-class UpdateAuthorScreen extends StatefulWidget {
+class UpdateGenreScreen extends StatefulWidget {
   final int id;
   final String name;
 
-  const UpdateAuthorScreen({super.key, required this.id, required this.name});
+  const UpdateGenreScreen({super.key, required this.id, required this.name});
 
   @override
-  State<UpdateAuthorScreen> createState() => _UpdateAuthorScreenState();
+  State<UpdateGenreScreen> createState() => _UpdateGenreScreenState();
 }
 
-class _UpdateAuthorScreenState extends State<UpdateAuthorScreen> {
-  late final TextEditingController _authorNameCtrl;
+class _UpdateGenreScreenState extends State<UpdateGenreScreen> {
+  late final TextEditingController _genreNameCtrl;
 
   @override
   void initState() {
-    _authorNameCtrl = TextEditingController(text: widget.name);
+    _genreNameCtrl = TextEditingController(text: widget.name);
     super.initState();
   }
 
@@ -30,7 +28,7 @@ class _UpdateAuthorScreenState extends State<UpdateAuthorScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Обновить автора"),
+        title: const Text("Обновить жанр"),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -39,12 +37,12 @@ class _UpdateAuthorScreenState extends State<UpdateAuthorScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: TextField(
-              controller: _authorNameCtrl,
+              controller: _genreNameCtrl,
               decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  hintText: "Имя автора"),
+                  hintText: "Название жанра"),
             ),
           ),
           const SizedBox(
@@ -52,25 +50,25 @@ class _UpdateAuthorScreenState extends State<UpdateAuthorScreen> {
           ),
           ElevatedButton(
             onPressed: () async  {
-              if (_authorNameCtrl.text.isEmpty) {
-                snackBar(context, "Author name cant be null");
+              if (_genreNameCtrl.text.isEmpty) {
+                snackBar(context, "Genre name cant be null");
               } else {
-                context.read<AuthorBloc>().add(UpdateAuthorEvent(context,
-                    id: widget.id.toString(), name: _authorNameCtrl.text));
-                    context.read<AuthorBloc>().add(ReadAuthorEvent());
+                context.read<GenreBloc>().add(UpdateGenreEvent(context,
+                    id: widget.id.toString(), name: _genreNameCtrl.text));
+                    context.read<GenreBloc>().add(ReadGenreEvent());
               }
             },
-            child: BlocBuilder<AuthorBloc, AuthorState>(
+            child: BlocBuilder<GenreBloc, GenreState>(
               builder: (context, state) {
-                if (state is UpdateAuthorLoading) {
+                if (state is UpdateGenreLoading) {
                   bool isLoading = state.isLoading;
                   return isLoading
                       ? const CircularProgressIndicator(
                           color: Colors.white,
                         )
-                      : const Text("Обновить автора");
+                      : const Text("Обновить жанр");
                 } else {
-                  return const Text("Обновить автора");
+                  return const Text("Обновить жанр");
                 }
               },
             ),

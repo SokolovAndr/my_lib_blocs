@@ -1,18 +1,18 @@
 import 'dart:convert';
 
-AuthorModel authorModelFromJson(String str) =>
-    AuthorModel.fromJson(json.decode(str));
+GenreModel genreModelFromJson(String str) =>
+    GenreModel.fromJson(json.decode(str));
 
-String authorModelToJson(AuthorModel data) => json.encode(data.toJson());
+String genreModelToJson(GenreModel data) => json.encode(data.toJson());
 
-class AuthorModel {
+class GenreModel {
   List<Data> data;
 
-  AuthorModel({
+  GenreModel({
     required this.data,
   });
 
-  factory AuthorModel.fromJson(Map<String, dynamic> json) => AuthorModel(
+  factory GenreModel.fromJson(Map<String, dynamic> json) => GenreModel(
         data: List<Data>.from(json["data"].map((x) => Data.fromJson(x))),
       );
 

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_lib_blocs/data/provider/author_provider.dart';
+import 'package:my_lib_blocs/data/provider/genre_provider.dart';
 import 'package:my_lib_blocs/data/provider/user_provider.dart';
 import 'package:my_lib_blocs/data/repository/author_repository.dart';
+import 'package:my_lib_blocs/data/repository/genre_repository.dart';
 import 'package:my_lib_blocs/data/repository/user_repository.dart';
 import 'package:my_lib_blocs/logic/bloc/author_bloc.dart';
+import 'package:my_lib_blocs/logic/bloc/genre_bloc.dart';
 import 'package:my_lib_blocs/logic/bloc/user_bloc.dart';
 import 'logic/cubit/navigation_cubit.dart';
 import 'presentation/widgets/navigation_menu_widget.dart';
@@ -19,6 +22,8 @@ void main() {
         RepositoryProvider(
           create: (context) => AuthorRepository(AuthorProvider()),
         ),
+        RepositoryProvider(
+            create: (context) => GenreRepository(GenreProvider()))
       ],
       child: MultiBlocProvider(
         providers: [
@@ -26,6 +31,8 @@ void main() {
               create: (context) => UserBloc(context.read<UserRepository>())),
           BlocProvider(
               create: (context) => AuthorBloc(context.read<AuthorRepository>())),
+          BlocProvider(
+              create: (context) => GenreBloc(context.read<GenreRepository>())),
           BlocProvider(
             lazy: false,
             create: (context) => NavigationCubit(),
