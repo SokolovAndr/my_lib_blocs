@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_lib_blocs/data/model/author_model.dart';
+import 'package:my_lib_blocs/data/model/genre_model.dart';
 import 'package:my_lib_blocs/logic/bloc/book_bloc.dart';
+import 'package:my_lib_blocs/presentation/screens/genres_choose_screen.dart';
 import '../../constants/snack_bar.dart';
 import '../../logic/bloc/book_event.dart';
 import '../../logic/bloc/book_state.dart';
+import 'authors_choose_screen.dart';
 
 class AddBookScreen extends StatefulWidget {
   const AddBookScreen({super.key});
@@ -38,6 +42,9 @@ class _AddBookScreenState extends State<AddBookScreen> {
   }
 
   Widget get _buildBody {
+    DataAuthor? author = DataAuthor(id: 0, name: "");
+    DataGenre? genre = DataGenre(id: 0, name: "");
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -50,7 +57,8 @@ class _AddBookScreenState extends State<AddBookScreen> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                hintText: "Название"),
+                hintText: "Название",
+                labelText: "Название"),
           ),
         ),
         const SizedBox(
@@ -64,7 +72,8 @@ class _AddBookScreenState extends State<AddBookScreen> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                hintText: "Описание"),
+                hintText: "Описание",
+                labelText: "Описание"),
           ),
         ),
         const SizedBox(
@@ -73,12 +82,21 @@ class _AddBookScreenState extends State<AddBookScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: TextField(
+            readOnly: true,
             controller: _bookAuthorIdCtrl,
             decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                hintText: "Автор"),
+                hintText: "Автор",
+                labelText: "Автор" ?? author.name),
+            onTap: () async {
+              author = await Navigator.push<DataAuthor>(context,
+                  MaterialPageRoute(builder: (context) {
+                return const AuthorsChooseScreen();
+              }));
+              _bookAuthorIdCtrl.text = author?.name ?? "";
+            },
           ),
         ),
         const SizedBox(
@@ -87,12 +105,21 @@ class _AddBookScreenState extends State<AddBookScreen> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: TextField(
+            readOnly: true,
             controller: _bookGenreIdCtrl,
             decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                hintText: "Жанр"),
+                hintText: "Жанр",
+                labelText: "Жанр" ?? genre.name),
+            onTap: () async {
+              genre = await Navigator.push<DataGenre>(context,
+                  MaterialPageRoute(builder: (context) {
+                return const GenresChooseScreen();
+              }));
+              _bookGenreIdCtrl.text = genre?.name ?? "";
+            },
           ),
         ),
         const SizedBox(
@@ -109,8 +136,10 @@ class _AddBookScreenState extends State<AddBookScreen> {
                 context: context,
                 title: _bookTitleCtrl.text,
                 description: _bookDescriptionCtrl.text,
-                authorId: _bookAuthorIdCtrl.text,
-                genreId: _bookGenreIdCtrl.text));
+                authorId: author!.id,
+                genreId: genre!.id,
+                autorUi: author!,
+                genreUi: genre!));
           }
         }, child: BlocBuilder<BookBloc, BookState>(builder: (context, state) {
           if (state is AddBookLoading) {

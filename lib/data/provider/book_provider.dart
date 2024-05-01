@@ -2,15 +2,25 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
+import 'package:my_lib_blocs/data/model/author_model.dart';
 import 'package:my_lib_blocs/data/model/book_model.dart';
+import 'package:my_lib_blocs/data/model/genre_model.dart';
 
 class BookProvider {
-  Future<bool> addBookService(String title, String description, String authorId, String genreId) async {
+  Future<bool> addBookService(String title, String description, int authorId,
+      int genreId, DataAuthor autorUi, DataGenre genreUi) async {
     try {
-      http.Response response = await http.post(
-          Uri.parse("http://10.0.2.2:5080/Book"),
-          body: json.encode({"title": title, "description": description, "authorId":authorId, "genreId": genreId}),
-          headers: {'Content-Type': 'application/json'});
+      http.Response response =
+          await http.post(Uri.parse("http://10.0.2.2:5080/Book"),
+              body: json.encode({
+                "title": title,
+                "description": description,
+                "authorId": authorId,
+                "genreId": genreId,
+                "autorUi": autorUi,
+                "genreUi": genreUi
+              }),
+              headers: {'Content-Type': 'application/json'});
       debugPrint("Response body: ${response.body}");
       if (response.statusCode == 200) {
         return true;
@@ -33,12 +43,22 @@ class BookProvider {
     }
   }
 
-  Future<bool> updateBookService(String id, String title, String description, String authorId, String genreId) async {
+  Future<bool> updateBookService(String id, String title, String description,
+      int authorId, int genreId, DataAuthor autorUi, DataGenre genreUi) async {
     try {
-      http.Response response = await http.put(
-          Uri.parse("http://10.0.2.2:5080/Book/$id"),
-          body: json.encode({"id": id, "title": title, "description": description, "authorId":authorId, "genreId": genreId}),
-          headers: {'Content-Type': 'application/json'});
+      http.Response response =
+          await http.put(Uri.parse("http://10.0.2.2:5080/Book/$id"),
+              body: json.encode({
+                "id": id,
+                "title": title,
+                "description": description,
+                "authorId": authorId,
+                "genreId": genreId,
+                "autorUi": autorUi,
+                "genreUi": genreUi
+              }),
+              headers: {'Content-Type': 'application/json'});
+      debugPrint("Response body: ${response.body}");
       if (response.statusCode == 200) {
         debugPrint("statusCode ${response.statusCode.toString()}");
         return true;
@@ -54,9 +74,8 @@ class BookProvider {
 
   Future<bool> deleteBookService(String id) async {
     try {
-      http.Response response = await http.delete(
-          Uri.parse("http://10.0.2.2:5080/Book/$id"),
-          body: {"id": id});
+      http.Response response = await http
+          .delete(Uri.parse("http://10.0.2.2:5080/Book/$id"), body: {"id": id});
       if (response.statusCode == 200) {
         return true;
       } else {

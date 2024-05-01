@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:my_lib_blocs/data/model/genre_model.dart';
-import 'package:my_lib_blocs/logic/bloc/genre_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../data/model/genre_model.dart';
+import '../../logic/bloc/genre_bloc.dart';
 import '../../logic/bloc/genre_event.dart';
 import '../../logic/bloc/genre_state.dart';
-import 'add_genre_screen.dart';
-import 'update_genre_screen.dart';
 
-class GenresScreen extends StatefulWidget {
-  const GenresScreen({super.key});
+class GenresChooseScreen extends StatefulWidget {
+  const GenresChooseScreen({super.key});
 
   @override
-  State<GenresScreen> createState() => _GenresScreenState();
+  State<GenresChooseScreen> createState() => _GenresChooseScreenState();
 }
 
-class _GenresScreenState extends State<GenresScreen> {
+class _GenresChooseScreenState extends State<GenresChooseScreen> {
   @override
   void initState() {
     context.read<GenreBloc>().add(ReadGenreEvent());
@@ -29,17 +27,6 @@ class _GenresScreenState extends State<GenresScreen> {
         title: const Text("Жанры"),
       ),
       body: _buildBody,
-      floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            await Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const AddGenreScreen()));
-            Future.delayed(const Duration(milliseconds: 5), () {
-              context.read<GenreBloc>().add(ReadGenreEvent());
-            });
-          },
-          child: const Icon(Icons.add)),
     );
   }
 
@@ -76,24 +63,11 @@ class _GenresScreenState extends State<GenresScreen> {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () async {
-                await Navigator.push(context,
-                    MaterialPageRoute(builder: (context) {
-                  return UpdateGenreScreen(
-                      id: genreModel.dataGenre[index].id,
-                      name: genreModel.dataGenre[index].name);
-                }));
+                Navigator.pop<DataGenre>(context, genreModel.dataGenre[index]);
               },
               child: ListTile(
                 leading: Text(genreModel.dataGenre[index].id.toString()),
                 title: Text(genreModel.dataGenre[index].name),
-                trailing: IconButton(
-                  onPressed: () async {
-                    context.read<GenreBloc>().add(DeleteGenreEvent(
-                        id: genreModel.dataGenre[index].id.toString()));
-                    context.read<GenreBloc>().add(ReadGenreEvent());
-                  },
-                  icon: const Icon(Icons.delete_outline),
-                ),
               ),
             );
           }),

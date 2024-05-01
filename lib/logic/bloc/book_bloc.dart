@@ -10,7 +10,9 @@ class BookBloc extends Bloc<BookEvent, BookState> {
   BookBloc(this._bookRepository) : super(LogicInitializeState()) {
     on<AddBookEvent>((event, emit) async {
       emit(AddBookLoading(isLoading: true));
-      await _bookRepository.bookProvider.addBookService(event.title, event.description, event.authorId, event.genreId).then((value) {
+      await _bookRepository.bookProvider.addBookService(event.title, event.description, event.authorId,
+              event.genreId, event.autorUi, event.genreUi)
+          .then((value) {
         emit(AddBookLoading(isLoading: false));
         /*Future.delayed(const Duration(milliseconds: 500), () {
           Navigator.pop(event.context);
@@ -32,9 +34,10 @@ class BookBloc extends Bloc<BookEvent, BookState> {
 
     on<UpdateBookEvent>((event, emit) async {
       emit(UpdateBookLoading(isLoading: true));
-      //final Map<String, dynamic> data = {"id": event.id, "name": event.name};
-
-      await _bookRepository.bookProvider.updateBookService(event.id, event.title, event.description, event.authorId, event.genreId).then((value) {
+      await _bookRepository.bookProvider
+          .updateBookService(event.id, event.title, event.description,
+              event.authorId, event.genreId, event.autorUi, event.genreUi)
+          .then((value) {
         emit(UpdateBookLoading(isLoading: false));
         //snackBar(event.context, "User has been updated");
         /*Future.delayed(const Duration(milliseconds: 500), () {
@@ -48,7 +51,9 @@ class BookBloc extends Bloc<BookEvent, BookState> {
 
     on<DeleteBookEvent>((event, emit) async {
       emit(DeleteBookLoading(isLoading: true));
-      await _bookRepository.bookProvider.deleteBookService(event.id).then((value) {
+      await _bookRepository.bookProvider
+          .deleteBookService(event.id)
+          .then((value) {
         emit(DeleteBookLoading(isLoading: false));
       }).onError((error, stackTrace) {
         emit(DeleteBookLoading(isLoading: false));

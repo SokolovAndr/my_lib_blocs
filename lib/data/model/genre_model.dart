@@ -1,36 +1,36 @@
 import 'dart:convert';
 
-GenreModel genreModelFromJson(String str) =>
-    GenreModel.fromJson(json.decode(str));
-
+GenreModel genreModelFromJson(String str) => GenreModel.fromJson(json.decode(str));
 String genreModelToJson(GenreModel data) => json.encode(data.toJson());
 
+
 class GenreModel {
-  List<Data> data;
+  List<DataGenre> dataGenre;
 
   GenreModel({
-    required this.data,
+    required this.dataGenre,
   });
 
   factory GenreModel.fromJson(Map<String, dynamic> json) => GenreModel(
-        data: List<Data>.from(json["data"].map((x) => Data.fromJson(x))),
+        dataGenre: List<DataGenre>.from(
+            json["data"].map((x) => DataGenre.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+        "data": List<dynamic>.from(dataGenre.map((x) => x.toJson())),
       };
 }
 
-class Data {
+class DataGenre {
   int id;
   String name;
 
-  Data({
+  DataGenre({
     required this.id,
     required this.name,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory DataGenre.fromJson(Map<String, dynamic> json) => DataGenre(
         id: json["id"],
         name: json["name"],
       );
@@ -40,3 +40,4 @@ class Data {
         "name": name,
       };
 }
+

@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:my_lib_blocs/data/model/author_model.dart';
+import 'package:my_lib_blocs/data/model/book_model.dart';
 import '../../constants/snack_bar.dart';
+import '../../data/model/genre_model.dart';
 import '../../logic/bloc/book_bloc.dart';
 import '../../logic/bloc/book_event.dart';
 import '../../logic/bloc/book_state.dart';
+import 'authors_choose_screen.dart';
+import 'genres_choose_screen.dart';
 
 class UpdateBookScreen extends StatefulWidget {
   final int id;
@@ -12,6 +16,8 @@ class UpdateBookScreen extends StatefulWidget {
   final String description;
   final int authorId;
   final int genreId;
+  final Ui autorUi;
+  final Ui genreUi;
 
   const UpdateBookScreen(
       {super.key,
@@ -19,7 +25,9 @@ class UpdateBookScreen extends StatefulWidget {
       required this.title,
       required this.description,
       required this.authorId,
-      required this.genreId});
+      required this.genreId,
+      required this.autorUi,
+      required this.genreUi});
 
   @override
   State<UpdateBookScreen> createState() => _UpdateBookScreenState();
@@ -35,13 +43,16 @@ class _UpdateBookScreenState extends State<UpdateBookScreen> {
   void initState() {
     _bookTitleCtrl = TextEditingController(text: widget.title);
     _bookDescriptionCtrl = TextEditingController(text: widget.description);
-    _bookAuthorIdCtrl = TextEditingController(text: widget.authorId.toString());
-    _bookGenreIdCtrl = TextEditingController(text: widget.genreId.toString());
+    _bookAuthorIdCtrl = TextEditingController(text: widget.autorUi.name);
+    _bookGenreIdCtrl = TextEditingController(text: widget.genreUi.name);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    DataAuthor? author = DataAuthor(id: 0, name: "");
+    DataGenre? genre = DataGenre(id: 0, name: "");
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Обновить книгу"),
@@ -81,12 +92,21 @@ class _UpdateBookScreenState extends State<UpdateBookScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: TextField(
+              readOnly: true,
               controller: _bookAuthorIdCtrl,
               decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  hintText: "Автор"),
+                  hintText: "Автор",
+                  labelText: author.name),
+              onTap: () async {
+                author = await Navigator.push<DataAuthor>(context,
+                    MaterialPageRoute(builder: (context) {
+                  return const AuthorsChooseScreen();
+                }));
+                _bookAuthorIdCtrl.text = author?.name ?? "";
+              },
             ),
           ),
           const SizedBox(
@@ -95,28 +115,44 @@ class _UpdateBookScreenState extends State<UpdateBookScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: TextField(
+              readOnly: true,
               controller: _bookGenreIdCtrl,
               decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  hintText: "Жанр"),
+                  hintText: "Жанр",
+                  labelText: genre.name),
+              onTap: () async {
+                genre = await Navigator.push<DataGenre>(context,
+                    MaterialPageRoute(builder: (context) {
+                  return const GenresChooseScreen();
+                }));
+                _bookGenreIdCtrl.text = genre?.name ?? "";
+              },
             ),
           ),
           const SizedBox(
             height: 15,
           ),
+          //___________ЗДЕСЬ КОД
           ElevatedButton(
-            onPressed: () async  {
+            onPressed: () async {
               if (_bookTitleCtrl.text.isEmpty ||
-              _bookDescriptionCtrl.text.isEmpty ||
-              _bookAuthorIdCtrl.text.isEmpty ||
-              _bookGenreIdCtrl.text.isEmpty) {
+                  _bookDescriptionCtrl.text.isEmpty ||
+                  _bookAuthorIdCtrl.text.isEmpty ||
+                  _bookGenreIdCtrl.text.isEmpty) {
                 snackBar(context, "Введите все данные");
               } else {
                 context.read<BookBloc>().add(UpdateBookEvent(context,
-                    id: widget.id.toString(), title: _bookTitleCtrl.text, description: _bookDescriptionCtrl.text, authorId: _bookAuthorIdCtrl.text, genreId: _bookGenreIdCtrl.text));
-                    context.read<BookBloc>().add(ReadBookEvent());
+                    id: widget.id.toString(),
+                    title: _bookTitleCtrl.text,
+                    description: _bookDescriptionCtrl.text,
+                    authorId: author!.id,
+                    genreId: genre!.id,
+                    autorUi: author!,
+                    genreUi: genre!));
+                context.read<BookBloc>().add(ReadBookEvent());
               }
             },
             child: BlocBuilder<BookBloc, BookState>(

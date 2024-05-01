@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:my_lib_blocs/data/model/author_model.dart';
-import 'package:my_lib_blocs/logic/bloc/author_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../data/model/author_model.dart';
+import '../../logic/bloc/author_bloc.dart';
 import '../../logic/bloc/author_event.dart';
 import '../../logic/bloc/author_state.dart';
-import 'add_author_screen.dart';
-import 'update_author_screen.dart';
 
-class AuthorsScreen extends StatefulWidget {
-  const AuthorsScreen({super.key});
+class AuthorsChooseScreen extends StatefulWidget {
+  const AuthorsChooseScreen({super.key});
 
   @override
-  State<AuthorsScreen> createState() => _AuthorsScreenState();
+  State<AuthorsChooseScreen> createState() => _AuthorsChooseScreenState();
 }
 
-class _AuthorsScreenState extends State<AuthorsScreen> {
+class _AuthorsChooseScreenState extends State<AuthorsChooseScreen> {
   @override
   void initState() {
     context.read<AuthorBloc>().add(ReadAuthorEvent());
@@ -29,17 +27,6 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
         title: const Text("Авторы"),
       ),
       body: _buildBody,
-      floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            await Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const AddAuthorScreen()));
-            Future.delayed(const Duration(milliseconds: 5), () {
-              context.read<AuthorBloc>().add(ReadAuthorEvent());
-            });
-          },
-          child: const Icon(Icons.add)),
     );
   }
 
@@ -76,24 +63,12 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () async {
-                await Navigator.push(context,
-                    MaterialPageRoute(builder: (context) {
-                  return UpdateAuthorScreen(
-                      id: authorModel.dataAuthor[index].id,
-                      name: authorModel.dataAuthor[index].name);
-                }));
+                Navigator.pop<DataAuthor>(
+                    context, authorModel.dataAuthor[index]);
               },
               child: ListTile(
                 leading: Text(authorModel.dataAuthor[index].id.toString()),
                 title: Text(authorModel.dataAuthor[index].name),
-                trailing: IconButton(
-                  onPressed: () async {
-                    context.read<AuthorBloc>().add(DeleteAuthorEvent(
-                        id: authorModel.dataAuthor[index].id.toString()));
-                    context.read<AuthorBloc>().add(ReadAuthorEvent());
-                  },
-                  icon: const Icon(Icons.delete_outline),
-                ),
               ),
             );
           }),

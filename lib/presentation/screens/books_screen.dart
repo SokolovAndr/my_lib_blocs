@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_lib_blocs/data/model/book_model.dart';
 import 'package:my_lib_blocs/logic/bloc/book_bloc.dart';
-
 import '../../logic/bloc/book_event.dart';
 import '../../logic/bloc/book_state.dart';
 import 'add_book_screen.dart';
@@ -54,8 +53,9 @@ class _BooksScreenState extends State<BooksScreen> {
           child: Text(err),
         );
       } else if (state is ReadBookState) {
-        List<Data> bookList = state.bookModel.data;
+        List<DataBook> bookList = state.bookModel.dataBook;
         var data = state.bookModel;
+
         return bookList.isNotEmpty
             ? _buildListView(data)
             : const Center(child: Text("Список пуст"));
@@ -71,33 +71,22 @@ class _BooksScreenState extends State<BooksScreen> {
         context.read<BookBloc>().add(ReadBookEvent());
       },
       child: ListView.builder(
-          itemCount: bookModel.data.length,
+          itemCount: bookModel.dataBook.length,
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () async {
                 await Navigator.push(context,
                     MaterialPageRoute(builder: (context) {
                   return UpdateBookScreen(
-                      id: bookModel.data[index].id,
-                      title: bookModel.data[index].title,
-                      description: bookModel.data[index].description,
-                      authorId: bookModel.data[index].authorId,
-                      genreId: bookModel.data[index].genreId);
+                      id: bookModel.dataBook[index].id,
+                      title: bookModel.dataBook[index].title,
+                      description: bookModel.dataBook[index].description,
+                      authorId: bookModel.dataBook[index].authorId,
+                      genreId: bookModel.dataBook[index].genreId,
+                      autorUi: bookModel.dataBook[index].autorUi,
+                      genreUi: bookModel.dataBook[index].genreUi);
                 }));
               },
-              /*child: ListTile(
-                leading: Text(bookModel.data[index].id.toString()),
-                title: Text(bookModel.data[index].title),
-                subtitle: Text(bookModel.data[index].description),
-                trailing: IconButton(
-                  onPressed: () async {
-                    context.read<BookBloc>().add(DeleteBookEvent(
-                        id: bookModel.data[index].id.toString()));
-                    context.read<BookBloc>().add(ReadBookEvent());
-                  },
-                  icon: const Icon(Icons.delete_outline),
-                ),
-              ),*/
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Card(
@@ -113,63 +102,35 @@ class _BooksScreenState extends State<BooksScreen> {
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  bookModel.data[index].id.toString(),
+                                  bookModel.dataBook[index].id.toString(),
                                   style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 1, horizontal: 1),
-                                child: Divider(
-                                  thickness: 1,
-                                ),
-                              ),
+                              const PaddingWidget(),
                               Text(
-                                bookModel.data[index].title,
+                                bookModel.dataBook[index].title,
                                 style: const TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w400),
-                                //maxLines: 3,
                               ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 1, horizontal: 1),
-                                child: Divider(
-                                  thickness: 1,
-                                ),
-                              ),
+                              const PaddingWidget(),
                               Text(
-                                bookModel.data[index].description,
+                                bookModel.dataBook[index].description,
                                 style: const TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w400),
-                                //maxLines: 3,
                               ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 1, horizontal: 1),
-                                child: Divider(
-                                  thickness: 1,
-                                ),
-                              ),
+                              const PaddingWidget(),
                               Text(
-                                bookModel.data[index].authorId.toString(),
+                                bookModel.dataBook[index].autorUi.name,
                                 style: const TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w400),
-                                //maxLines: 3,
                               ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 1, horizontal: 1),
-                                child: Divider(
-                                  thickness: 1,
-                                ),
-                              ),
+                              const PaddingWidget(),
                               Text(
-                                bookModel.data[index].genreId.toString(),
+                                bookModel.dataBook[index].genreUi.name,
                                 style: const TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.w400),
-                                //maxLines: 3,
                               ),
                             ],
                           ),
@@ -180,7 +141,7 @@ class _BooksScreenState extends State<BooksScreen> {
                           child: IconButton(
                             onPressed: () async {
                               context.read<BookBloc>().add(DeleteBookEvent(
-                                  id: bookModel.data[index].id.toString()));
+                                  id: bookModel.dataBook[index].id.toString()));
                               context.read<BookBloc>().add(ReadBookEvent());
                             },
                             icon: const Icon(Icons.delete_outline),
@@ -193,6 +154,22 @@ class _BooksScreenState extends State<BooksScreen> {
               ),
             );
           }),
+    );
+  }
+}
+
+class PaddingWidget extends StatelessWidget {
+  const PaddingWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
+      child: Divider(
+        thickness: 1,
+      ),
     );
   }
 }

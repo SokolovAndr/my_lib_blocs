@@ -5,32 +5,35 @@ AuthorModel authorModelFromJson(String str) =>
 
 String authorModelToJson(AuthorModel data) => json.encode(data.toJson());
 
+String dataAuthorToJson(DataAuthor data2) => json.encode(data2.toJson());
+
 class AuthorModel {
-  List<Data> data;
+  List<DataAuthor> dataAuthor;
 
   AuthorModel({
-    required this.data,
+    required this.dataAuthor,
   });
 
   factory AuthorModel.fromJson(Map<String, dynamic> json) => AuthorModel(
-        data: List<Data>.from(json["data"].map((x) => Data.fromJson(x))),
+        dataAuthor: List<DataAuthor>.from(
+            json["data"].map((x) => DataAuthor.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+        "data": List<dynamic>.from(dataAuthor.map((x) => x.toJson())),
       };
 }
 
-class Data {
+class DataAuthor {
   int id;
   String name;
 
-  Data({
+  DataAuthor({
     required this.id,
     required this.name,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory DataAuthor.fromJson(Map<String, dynamic> json) => DataAuthor(
         id: json["id"],
         name: json["name"],
       );
@@ -39,4 +42,5 @@ class Data {
         "id": id,
         "name": name,
       };
+
 }
