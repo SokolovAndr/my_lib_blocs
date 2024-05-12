@@ -50,8 +50,8 @@ class _UpdateBookScreenState extends State<UpdateBookScreen> {
 
   @override
   Widget build(BuildContext context) {
-    DataAuthor? author = DataAuthor(id: 0, name: "");
-    DataGenre? genre = DataGenre(id: 0, name: "");
+    DataAuthor? author = DataAuthor(id: widget.autorUi.id, name: widget.autorUi.name);
+    DataGenre? genre = DataGenre(id: widget.genreUi.id, name: widget.genreUi.name);
 
     return Scaffold(
       appBar: AppBar(
