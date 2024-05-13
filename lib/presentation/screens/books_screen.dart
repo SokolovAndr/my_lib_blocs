@@ -83,8 +83,10 @@ class _BooksScreenState extends State<BooksScreen> {
                       description: bookModel.dataBook[index].description,
                       authorId: bookModel.dataBook[index].authorId,
                       genreId: bookModel.dataBook[index].genreId,
+                      imageId: bookModel.dataBook[index].imageId,
                       autorUi: bookModel.dataBook[index].autorUi,
-                      genreUi: bookModel.dataBook[index].genreUi);
+                      genreUi: bookModel.dataBook[index].genreUi,
+                      imageUi: bookModel.dataBook[index].imageUi);
                 }));
               },
               child: Padding(
@@ -95,6 +97,39 @@ class _BooksScreenState extends State<BooksScreen> {
                     padding: const EdgeInsets.all(10.0),
                     child: Row(
                       children: [
+                        SizedBox(
+                          width: 100,
+                          height: 150,
+                          child: Image.network(
+                            bookModel.dataBook[index].imageUi.name,
+                            errorBuilder: (BuildContext context,
+                                Object exception, StackTrace? stackTrace) {
+                              return Center(
+                                child: Image.asset(
+                                  "assets/images/error_icon.png",
+                                  width: 50,
+                                  height: 50,
+                                ),
+                              );
+                            },
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) {
+                                return child;
+                              }
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 25),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

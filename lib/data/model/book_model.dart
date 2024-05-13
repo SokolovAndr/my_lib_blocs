@@ -26,8 +26,10 @@ class DataBook {
     String description;
     int authorId;
     int genreId;
+    int imageId;
     Ui autorUi;
     Ui genreUi;
+    ImageUi imageUi;
 
     DataBook({
         required this.id,
@@ -35,6 +37,8 @@ class DataBook {
         required this.description,
         required this.authorId,
         required this.genreId,
+        required this.imageId,
+        required this.imageUi,
         required this.autorUi,
         required this.genreUi,
     });
@@ -45,6 +49,8 @@ class DataBook {
         description: json["description"],
         authorId: json["authorId"],
         genreId: json["genreId"],
+        imageId: json["imageId"],
+        imageUi: ImageUi.fromJson(json["imageUi"]),
         autorUi: Ui.fromJson(json["autorUi"]),
         genreUi: Ui.fromJson(json["genreUi"]),
     );
@@ -55,6 +61,8 @@ class DataBook {
         "description": description,
         "authorId": authorId,
         "genreId": genreId,
+        "imageId": imageId,
+        "imageUi": imageUi.toJson(),
         "autorUi": autorUi.toJson(),
         "genreUi": genreUi.toJson(),
     };
@@ -79,4 +87,27 @@ class Ui {
         "name": name,
     };
 }
-  
+
+class ImageUi {
+    int id;
+    String name;
+    String type;
+
+    ImageUi({
+        required this.id,
+        required this.name,
+        required this.type,
+    });
+
+    factory ImageUi.fromJson(Map<String, dynamic> json) => ImageUi(
+        id: json["id"],
+        name: json["name"],
+        type: json["type"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "type": type,
+    };
+}

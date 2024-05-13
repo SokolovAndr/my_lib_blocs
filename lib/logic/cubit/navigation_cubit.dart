@@ -11,4 +11,5 @@ class NavigationCubit extends Cubit<NavigationState> {
   void goToUsersScreen() => emit(StateB());
   void goToAuthorsScreen() => emit(StateC());
   void goToGenresScreen() => emit(StateD());
+  void goToImagesScreen() => emit(StateE());
 }

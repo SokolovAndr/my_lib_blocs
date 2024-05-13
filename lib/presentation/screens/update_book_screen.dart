@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_lib_blocs/data/model/author_model.dart';
 import 'package:my_lib_blocs/data/model/book_model.dart';
+import 'package:my_lib_blocs/data/model/image_model.dart';
 import '../../constants/snack_bar.dart';
 import '../../data/model/genre_model.dart';
 import '../../logic/bloc/book_bloc.dart';
@@ -16,8 +17,10 @@ class UpdateBookScreen extends StatefulWidget {
   final String description;
   final int authorId;
   final int genreId;
+  final int imageId;
   final Ui autorUi;
   final Ui genreUi;
+  final ImageUi imageUi;
 
   const UpdateBookScreen(
       {super.key,
@@ -26,8 +29,10 @@ class UpdateBookScreen extends StatefulWidget {
       required this.description,
       required this.authorId,
       required this.genreId,
+      required this.imageId,
       required this.autorUi,
-      required this.genreUi});
+      required this.genreUi,
+      required this.imageUi});
 
   @override
   State<UpdateBookScreen> createState() => _UpdateBookScreenState();
@@ -38,6 +43,7 @@ class _UpdateBookScreenState extends State<UpdateBookScreen> {
   late final TextEditingController _bookDescriptionCtrl;
   late final TextEditingController _bookAuthorIdCtrl;
   late final TextEditingController _bookGenreIdCtrl;
+  late final TextEditingController _bookImageIdCtrl;
 
   @override
   void initState() {
@@ -45,13 +51,20 @@ class _UpdateBookScreenState extends State<UpdateBookScreen> {
     _bookDescriptionCtrl = TextEditingController(text: widget.description);
     _bookAuthorIdCtrl = TextEditingController(text: widget.autorUi.name);
     _bookGenreIdCtrl = TextEditingController(text: widget.genreUi.name);
+    _bookImageIdCtrl = TextEditingController(text: widget.imageUi.name);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    DataAuthor? author = DataAuthor(id: widget.autorUi.id, name: widget.autorUi.name);
-    DataGenre? genre = DataGenre(id: widget.genreUi.id, name: widget.genreUi.name);
+    DataAuthor? author =
+        DataAuthor(id: widget.autorUi.id, name: widget.autorUi.name);
+    DataGenre? genre =
+        DataGenre(id: widget.genreUi.id, name: widget.genreUi.name);
+    DataImage? image = DataImage(
+        id: widget.autorUi.id,
+        name: widget.imageUi.name,
+        type: widget.imageUi.type);
 
     return Scaffold(
       appBar: AppBar(
@@ -150,8 +163,10 @@ class _UpdateBookScreenState extends State<UpdateBookScreen> {
                     description: _bookDescriptionCtrl.text,
                     authorId: author!.id,
                     genreId: genre!.id,
+                    imageId: image!.id,
                     autorUi: author!,
-                    genreUi: genre!));
+                    genreUi: genre!,
+                    imageUi: image));
                 context.read<BookBloc>().add(ReadBookEvent());
               }
             },

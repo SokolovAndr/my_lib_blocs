@@ -4,12 +4,15 @@ import 'package:my_lib_blocs/data/provider/author_provider.dart';
 import 'package:my_lib_blocs/data/provider/book_provider.dart';
 import 'package:my_lib_blocs/data/provider/genre_provider.dart';
 import 'package:my_lib_blocs/data/provider/user_provider.dart';
+import 'package:my_lib_blocs/data/provider/image_provider.dart';
 import 'package:my_lib_blocs/data/repository/author_repository.dart';
 import 'package:my_lib_blocs/data/repository/book_repository.dart';
 import 'package:my_lib_blocs/data/repository/genre_repository.dart';
+import 'package:my_lib_blocs/data/repository/image_repository.dart';
 import 'package:my_lib_blocs/data/repository/user_repository.dart';
 import 'package:my_lib_blocs/logic/bloc/author_bloc.dart';
 import 'package:my_lib_blocs/logic/bloc/genre_bloc.dart';
+import 'package:my_lib_blocs/logic/bloc/image_bloc.dart';
 import 'package:my_lib_blocs/logic/bloc/user_bloc.dart';
 import 'logic/bloc/book_bloc.dart';
 import 'logic/cubit/navigation_cubit.dart';
@@ -20,15 +23,15 @@ void main() {
     MultiRepositoryProvider(
       providers: [
         RepositoryProvider(
-          create: (context) => UserRepository(UserProvider()),
-        ),
+          create: (context) => UserRepository(UserProvider())),
         RepositoryProvider(
-          create: (context) => AuthorRepository(AuthorProvider()),
-        ),
+          create: (context) => AuthorRepository(AuthorProvider())),
         RepositoryProvider(
-            create: (context) => GenreRepository(GenreProvider())),
+          create: (context) => GenreRepository(GenreProvider())),
         RepositoryProvider(
-          create: (context) => BookRepository(BookProvider()))
+          create: (context) => BookRepository(BookProvider())),
+        RepositoryProvider(
+          create: (context) => ImageRepository(MyImageProvider())),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -40,6 +43,8 @@ void main() {
               create: (context) => GenreBloc(context.read<GenreRepository>())),
           BlocProvider(
             create: (context) => BookBloc(context.read<BookRepository>())),
+          BlocProvider(
+            create: (context) => ImageBloc(context.read<ImageRepository>())),
           BlocProvider(
             lazy: false,
             create: (context) => NavigationCubit(),

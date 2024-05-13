@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_lib_blocs/presentation/screens/genres_screen.dart';
+import 'package:my_lib_blocs/presentation/screens/images_screen.dart';
 import '../../logic/cubit/navigation_cubit.dart';
 import '../screens/books_screen.dart';
 import '../screens/users_screen.dart';
@@ -39,6 +40,8 @@ class NavigationMenuWidget extends StatelessWidget {
                   context.read<NavigationCubit>().goToAuthorsScreen();
                 } else if (index == 3) {
                   context.read<NavigationCubit>().goToGenresScreen();
+                } else if (index == 4) {
+                  context.read<NavigationCubit>().goToImagesScreen();
                 }
               },
               items: const [
@@ -58,6 +61,10 @@ class NavigationMenuWidget extends StatelessWidget {
                   icon: Icon(Icons.list),
                   label: 'Жанры',
                 ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.list),
+                  label: 'Изображения',
+                ),
               ],
             ),
           ),
@@ -73,6 +80,8 @@ class NavigationMenuWidget extends StatelessWidget {
             return const AuthorsScreen();
           } else if (state is StateD) {
             return const GenresScreen();
+          } else if (state is StateE) {
+            return const ImagesScreen();
           }
           return const SizedBox();
         },

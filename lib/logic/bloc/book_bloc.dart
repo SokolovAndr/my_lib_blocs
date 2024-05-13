@@ -11,7 +11,7 @@ class BookBloc extends Bloc<BookEvent, BookState> {
     on<AddBookEvent>((event, emit) async {
       emit(AddBookLoading(isLoading: true));
       await _bookRepository.bookProvider.addBookService(event.title, event.description, event.authorId,
-              event.genreId, event.autorUi, event.genreUi)
+              event.genreId, event.imageId, event.autorUi, event.genreUi, event.imageUi)
           .then((value) {
         emit(AddBookLoading(isLoading: false));
         /*Future.delayed(const Duration(milliseconds: 500), () {
@@ -36,7 +36,7 @@ class BookBloc extends Bloc<BookEvent, BookState> {
       emit(UpdateBookLoading(isLoading: true));
       await _bookRepository.bookProvider
           .updateBookService(event.id, event.title, event.description,
-              event.authorId, event.genreId, event.autorUi, event.genreUi)
+              event.authorId, event.genreId, event.imageId, event.autorUi, event.genreUi, event.imageUi)
           .then((value) {
         emit(UpdateBookLoading(isLoading: false));
         //snackBar(event.context, "User has been updated");

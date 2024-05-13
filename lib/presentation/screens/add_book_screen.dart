@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_lib_blocs/data/model/author_model.dart';
 import 'package:my_lib_blocs/data/model/genre_model.dart';
+import 'package:my_lib_blocs/data/model/image_model.dart';
 import 'package:my_lib_blocs/logic/bloc/book_bloc.dart';
+import 'package:my_lib_blocs/presentation/screens/add_image_screen.dart';
 import 'package:my_lib_blocs/presentation/screens/genres_choose_screen.dart';
+import 'package:my_lib_blocs/presentation/screens/images_choose_screen.dart';
 import '../../constants/snack_bar.dart';
 import '../../logic/bloc/book_event.dart';
 import '../../logic/bloc/book_state.dart';
@@ -19,15 +22,17 @@ class AddBookScreen extends StatefulWidget {
 class _AddBookScreenState extends State<AddBookScreen> {
   final TextEditingController _bookTitleCtrl = TextEditingController();
   final TextEditingController _bookDescriptionCtrl = TextEditingController();
-  final TextEditingController _bookAuthorIdCtrl = TextEditingController();
-  final TextEditingController _bookGenreIdCtrl = TextEditingController();
+  final TextEditingController _bookAuthorCtrl = TextEditingController();
+  final TextEditingController _bookGenreCtrl = TextEditingController();
+  final TextEditingController _bookImageCtrl = TextEditingController();
 
   @override
   void dispose() {
     _bookTitleCtrl.dispose();
     _bookDescriptionCtrl.dispose();
-    _bookAuthorIdCtrl.dispose();
-    _bookGenreIdCtrl.dispose();
+    _bookAuthorCtrl.dispose();
+    _bookGenreCtrl.dispose();
+    _bookImageCtrl.dispose();
     super.dispose();
   }
 
@@ -44,6 +49,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
   Widget get _buildBody {
     DataAuthor? author = DataAuthor(id: 0, name: "");
     DataGenre? genre = DataGenre(id: 0, name: "");
+    DataImage? image = DataImage(id: 0, name: "", type: "");
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -83,7 +89,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: TextField(
             readOnly: true,
-            controller: _bookAuthorIdCtrl,
+            controller: _bookAuthorCtrl,
             decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -95,7 +101,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
                   MaterialPageRoute(builder: (context) {
                 return const AuthorsChooseScreen();
               }));
-              _bookAuthorIdCtrl.text = author?.name ?? "";
+              _bookAuthorCtrl.text = author?.name ?? "";
             },
           ),
         ),
@@ -106,7 +112,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: TextField(
             readOnly: true,
-            controller: _bookGenreIdCtrl,
+            controller: _bookGenreCtrl,
             decoration: InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -118,7 +124,30 @@ class _AddBookScreenState extends State<AddBookScreen> {
                   MaterialPageRoute(builder: (context) {
                 return const GenresChooseScreen();
               }));
-              _bookGenreIdCtrl.text = genre?.name ?? "";
+              _bookGenreCtrl.text = genre?.name ?? "";
+            },
+          ),
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: TextField(
+            readOnly: true,
+            controller: _bookImageCtrl,
+            decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: "Изображение",
+                labelText: "Изображение" ?? image.name),
+            onTap: () async {
+              image = await Navigator.push<DataImage>(context,
+                  MaterialPageRoute(builder: (context) {
+                return const ImagesChooseScreen();
+              }));
+              _bookImageCtrl.text = image?.name ?? "";
             },
           ),
         ),
@@ -128,18 +157,22 @@ class _AddBookScreenState extends State<AddBookScreen> {
         ElevatedButton(onPressed: () {
           if (_bookTitleCtrl.text.isEmpty ||
               _bookDescriptionCtrl.text.isEmpty ||
-              _bookAuthorIdCtrl.text.isEmpty ||
-              _bookGenreIdCtrl.text.isEmpty) {
+              _bookAuthorCtrl.text.isEmpty ||
+              _bookGenreCtrl.text.isEmpty ||
+              _bookImageCtrl.text.isEmpty) {
             snackBar(context, "Введите все данные");
           } else {
+
             context.read<BookBloc>().add(AddBookEvent(
                 context: context,
                 title: _bookTitleCtrl.text,
                 description: _bookDescriptionCtrl.text,
                 authorId: author!.id,
                 genreId: genre!.id,
+                imageId: image!.id,
                 autorUi: author!,
-                genreUi: genre!));
+                genreUi: genre!,
+                imageUi: image!));
           }
         }, child: BlocBuilder<BookBloc, BookState>(builder: (context, state) {
           if (state is AddBookLoading) {

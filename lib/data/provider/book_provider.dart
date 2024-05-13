@@ -5,10 +5,11 @@ import 'package:dio/dio.dart';
 import 'package:my_lib_blocs/data/model/author_model.dart';
 import 'package:my_lib_blocs/data/model/book_model.dart';
 import 'package:my_lib_blocs/data/model/genre_model.dart';
+import 'package:my_lib_blocs/data/model/image_model.dart';
 
 class BookProvider {
   Future<bool> addBookService(String title, String description, int authorId,
-      int genreId, DataAuthor autorUi, DataGenre genreUi) async {
+      int genreId, int imageId, DataAuthor autorUi, DataGenre genreUi, DataImage imageUi) async {
     try {
       http.Response response =
           await http.post(Uri.parse("http://10.0.2.2:5080/Book"),
@@ -17,8 +18,10 @@ class BookProvider {
                 "description": description,
                 "authorId": authorId,
                 "genreId": genreId,
+                "imageId": imageId,
                 "autorUi": autorUi,
-                "genreUi": genreUi
+                "genreUi": genreUi,
+                "imageUi": imageUi
               }),
               headers: {'Content-Type': 'application/json'});
       debugPrint("Response body: ${response.body}");
@@ -44,7 +47,7 @@ class BookProvider {
   }
 
   Future<bool> updateBookService(String id, String title, String description,
-      int authorId, int genreId, DataAuthor autorUi, DataGenre genreUi) async {
+      int authorId, int genreId, int imageId, DataAuthor autorUi, DataGenre genreUi, DataImage imageUi) async {
     try {
       http.Response response =
           await http.put(Uri.parse("http://10.0.2.2:5080/Book/$id"),
@@ -54,8 +57,10 @@ class BookProvider {
                 "description": description,
                 "authorId": authorId,
                 "genreId": genreId,
+                "imageId": imageId,
                 "autorUi": autorUi,
-                "genreUi": genreUi
+                "genreUi": genreUi,
+                "imageUi": imageUi
               }),
               headers: {'Content-Type': 'application/json'});
       debugPrint("Response body: ${response.body}");

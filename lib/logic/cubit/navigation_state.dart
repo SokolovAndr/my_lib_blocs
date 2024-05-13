@@ -16,3 +16,6 @@ class StateC extends NavigationState {
 class StateD extends NavigationState {
   final int index = 3;
 }
+class StateE extends NavigationState {
+  final int index = 4;
+}
