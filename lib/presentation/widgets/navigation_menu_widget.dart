@@ -62,7 +62,7 @@ class NavigationMenuWidget extends StatelessWidget {
                   label: 'Жанры',
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.list),
+                  icon: Icon(Icons.picture_in_picture),
                   label: 'Изображения',
                 ),
               ],
