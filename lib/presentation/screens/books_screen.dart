@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:my_lib_blocs/data/model/book_model.dart';
 import 'package:my_lib_blocs/logic/bloc/book_bloc.dart';
 import '../../logic/bloc/book_event.dart';
@@ -27,6 +29,14 @@ class _BooksScreenState extends State<BooksScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text("Книги"),
+        actions: [
+          TextButton(
+              onPressed: clearCache,
+              child: const Text(
+                'Очистить кэш',
+                style: TextStyle(color: Colors.black),
+              ))
+        ],
       ),
       body: _buildBody,
       floatingActionButton: FloatingActionButton(
@@ -100,7 +110,9 @@ class _BooksScreenState extends State<BooksScreen> {
                         SizedBox(
                           width: 100,
                           height: 150,
-                          child: Image.network(
+                          child: buildImage(bookModel.dataBook[index].imageId),
+
+                          /*Image.network(
                             bookModel.dataBook[index].imageUi.name,
                             errorBuilder: (BuildContext context,
                                 Object exception, StackTrace? stackTrace) {
@@ -127,7 +139,7 @@ class _BooksScreenState extends State<BooksScreen> {
                                 ),
                               );
                             },
-                          ),
+                          ),*/
                         ),
                         const SizedBox(width: 25),
                         Expanded(
@@ -190,6 +202,32 @@ class _BooksScreenState extends State<BooksScreen> {
             );
           }),
     );
+  }
+
+  Widget buildImage(int myIndex) => ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: CachedNetworkImage(
+          key: UniqueKey(),
+          imageUrl: 'http://10.0.2.2:5080/Image/File$myIndex',
+          height: 50,
+          width: 50,
+          fit: BoxFit.cover,
+          maxHeightDiskCache: 75,
+          placeholder: (context, url) =>
+              const Center(child: CircularProgressIndicator()),
+          errorWidget: (context, url, error) => Container(
+            color: Colors.black12,
+            child: const Icon(Icons.error, color: Colors.red),
+          ),
+        ),
+      );
+
+  void clearCache() {
+    DefaultCacheManager().emptyCache();
+
+    imageCache!.clear();
+    imageCache!.clearLiveImages();
+    setState(() {});
   }
 }
 

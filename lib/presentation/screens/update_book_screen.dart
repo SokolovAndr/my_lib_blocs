@@ -10,6 +10,7 @@ import '../../logic/bloc/book_event.dart';
 import '../../logic/bloc/book_state.dart';
 import 'authors_choose_screen.dart';
 import 'genres_choose_screen.dart';
+import 'images_choose_screen.dart';
 
 class UpdateBookScreen extends StatefulWidget {
   final int id;
@@ -43,7 +44,7 @@ class _UpdateBookScreenState extends State<UpdateBookScreen> {
   late final TextEditingController _bookDescriptionCtrl;
   late final TextEditingController _bookAuthorIdCtrl;
   late final TextEditingController _bookGenreIdCtrl;
-  late final TextEditingController _bookImageIdCtrl;
+  late final TextEditingController _bookImageCtrl;
 
   @override
   void initState() {
@@ -51,7 +52,7 @@ class _UpdateBookScreenState extends State<UpdateBookScreen> {
     _bookDescriptionCtrl = TextEditingController(text: widget.description);
     _bookAuthorIdCtrl = TextEditingController(text: widget.autorUi.name);
     _bookGenreIdCtrl = TextEditingController(text: widget.genreUi.name);
-    _bookImageIdCtrl = TextEditingController(text: widget.imageUi.name);
+    _bookImageCtrl = TextEditingController(text: widget.imageUi.name);
     super.initState();
   }
 
@@ -146,6 +147,29 @@ class _UpdateBookScreenState extends State<UpdateBookScreen> {
             ),
           ),
           const SizedBox(
+          height: 15,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: TextField(
+            readOnly: true,
+            controller: _bookImageCtrl,
+            decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                hintText: "Изображение",
+                labelText: "Изображение" ?? image.name),
+            onTap: () async {
+              image = await Navigator.push<DataImage>(context,
+                  MaterialPageRoute(builder: (context) {
+                return const ImagesChooseScreen();
+              }));
+              _bookImageCtrl.text = image?.name ?? "";
+            },
+          ),
+        ),
+          const SizedBox(
             height: 15,
           ),
           //___________ЗДЕСЬ КОД
@@ -166,7 +190,7 @@ class _UpdateBookScreenState extends State<UpdateBookScreen> {
                     imageId: image!.id,
                     autorUi: author!,
                     genreUi: genre!,
-                    imageUi: image));
+                    imageUi: image!));
                 context.read<BookBloc>().add(ReadBookEvent());
               }
             },
