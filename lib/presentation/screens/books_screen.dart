@@ -146,7 +146,7 @@ class _BooksScreenState extends State<BooksScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Align(
+                              /*Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
                                   bookModel.dataBook[index].id.toString(),
@@ -154,7 +154,7 @@ class _BooksScreenState extends State<BooksScreen> {
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold),
                                 ),
-                              ),
+                              ),*/
                               const PaddingWidget(),
                               Text(
                                 bookModel.dataBook[index].title,

@@ -63,10 +63,12 @@ class _AddImageScreenState extends State<AddImageScreen> {
 
       if (response.statusCode == 200) {
         print('File uploaded successfully');
+        snackBar(this.context, "Изображение успешно загружено");
       } else {
         print('Failed to upload file: ${response.statusCode}');
       }
-      return response.reasonPhrase;
+      //return response.reasonPhrase;
+      Navigator.pop(this.context);
     } catch (e) {
       snackBar(this.context, "Вы ничего не выбрали");
       print('Error: $e');
