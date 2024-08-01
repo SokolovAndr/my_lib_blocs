@@ -1,7 +1,7 @@
 # my_lib_blocs
 
 <img src="https://github.com/SokolovAndr/my_lib_blocs/blob/master/demonstration.gif"/>
-<img src="https://github.com/SokolovAndr/my_lib_blocs/blob/master/demonstration2.gif" width="720" height="1560"/>
+<img src="https://github.com/SokolovAndr/my_lib_blocs/blob/master/demonstration2.gif" width="360" height="780"/>
 Реализовано:
 1) Реализованы все CRUD (create, read, update, delete) операции для книг, авторов и жанров (взаимодействия с API);
 2) Реализована возможность выбора обложки книги из памяти телефона и создания обложки из фотографии, снятой камерой (работа с внутренними файлами и камерой устройства);
