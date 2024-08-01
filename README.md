@@ -8,3 +8,16 @@
 3) Реализация быстрого доступа к часто используемым данным (изображения подгружаются из КЭШа);
 4) Разбиение по слоям согласно принципам Clean Architecture;
 5) Использование BLoC как инструмент state-management;
+
+<table class="iksweb">
+	<tbody>
+		<tr>
+			<td>
+			  <img src="https://github.com/SokolovAndr/my_lib_blocs/blob/master/demonstration.gif" width="360" height="780"/>
+			</td>
+			<td>
+				<img src="https://github.com/SokolovAndr/my_lib_blocs/blob/master/demonstration2.gif" width="360" height="780"/>
+			</td>
+		</tr>
+	</tbody>
+</table>
