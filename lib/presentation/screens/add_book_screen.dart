@@ -4,7 +4,6 @@ import 'package:my_lib_blocs/data/model/author_model.dart';
 import 'package:my_lib_blocs/data/model/genre_model.dart';
 import 'package:my_lib_blocs/data/model/image_model.dart';
 import 'package:my_lib_blocs/logic/bloc/book_bloc.dart';
-import 'package:my_lib_blocs/presentation/screens/add_image_screen.dart';
 import 'package:my_lib_blocs/presentation/screens/genres_choose_screen.dart';
 import 'package:my_lib_blocs/presentation/screens/images_choose_screen.dart';
 import '../../constants/snack_bar.dart';
@@ -95,7 +94,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 hintText: "Автор",
-                labelText: "Автор" ?? author.name),
+                labelText: "Автор"),
             onTap: () async {
               author = await Navigator.push<DataAuthor>(context,
                   MaterialPageRoute(builder: (context) {
@@ -118,7 +117,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 hintText: "Жанр",
-                labelText: "Жанр" ?? genre.name),
+                labelText: "Жанр"),
             onTap: () async {
               genre = await Navigator.push<DataGenre>(context,
                   MaterialPageRoute(builder: (context) {
@@ -141,7 +140,7 @@ class _AddBookScreenState extends State<AddBookScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 hintText: "Изображение",
-                labelText: "Изображение" ?? image.name),
+                labelText: "Изображение"),
             onTap: () async {
               image = await Navigator.push<DataImage>(context,
                   MaterialPageRoute(builder: (context) {
@@ -162,7 +161,6 @@ class _AddBookScreenState extends State<AddBookScreen> {
               _bookImageCtrl.text.isEmpty) {
             snackBar(context, "Введите все данные");
           } else {
-
             context.read<BookBloc>().add(AddBookEvent(
                 context: context,
                 title: _bookTitleCtrl.text,

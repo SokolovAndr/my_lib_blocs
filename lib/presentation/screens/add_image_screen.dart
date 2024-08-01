@@ -2,13 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_lib_blocs/logic/bloc/image_bloc.dart';
-import 'package:my_lib_blocs/logic/bloc/image_state.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../constants/snack_bar.dart';
-import '../../logic/bloc/image_event.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
@@ -26,13 +22,10 @@ class _AddImageScreenState extends State<AddImageScreen> {
     try {
       final image = await ImagePicker().pickImage(source: source);
       if (image == null) return;
-
-      //final imageTemporary = File(image.path);
-      //setState(() => this.image = imageTemporary);
       final imagePremanent = await saveImagePermanently(image.path);
       setState(() => this.image = imagePremanent);
     } on PlatformException catch (e) {
-      print('Error: $e');
+      debugPrint('Error: $e');
     }
   }
 
@@ -60,18 +53,17 @@ class _AddImageScreenState extends State<AddImageScreen> {
       var request = http.MultipartRequest('POST', url);
       request.files.add(await http.MultipartFile.fromPath('file', image.path));
       var response = await request.send();
-
+      if (!mounted) return null;
       if (response.statusCode == 200) {
-        print('File uploaded successfully');
+        debugPrint('File uploaded successfully');
         snackBar(this.context, "Изображение успешно загружено");
       } else {
-        print('Failed to upload file: ${response.statusCode}');
+        debugPrint('Failed to upload file: ${response.statusCode}');
       }
-      //return response.reasonPhrase;
       Navigator.pop(this.context);
     } catch (e) {
       snackBar(this.context, "Вы ничего не выбрали");
-      print('Error: $e');
+      debugPrint('Error: $e');
     }
     return null;
   }
@@ -123,9 +115,9 @@ Widget buildButton(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.black,
+            backgroundColor: Colors.white,
             minimumSize: const Size.fromHeight(56),
-            primary: Colors.white,
-            onPrimary: Colors.black,
             textStyle: const TextStyle(fontSize: 20)),
         onPressed: onClicked,
         child: Row(

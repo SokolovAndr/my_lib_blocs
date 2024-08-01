@@ -54,16 +54,17 @@ class _AddAuthorScreenState extends State<AddAuthorScreen> {
           if (_authorNameCtrl.text.isEmpty) {
             snackBar(context, "Введите имя");
           } else {
-            context
-                .read<AuthorBloc>()
-                .add(AddAuthorEvent(name: _authorNameCtrl.text, context: context));
+            context.read<AuthorBloc>().add(
+                AddAuthorEvent(name: _authorNameCtrl.text, context: context));
           }
         }, child:
             BlocBuilder<AuthorBloc, AuthorState>(builder: (context, state) {
           if (state is AddAuthorLoading) {
             bool isLoading = state.isLoading;
             return isLoading
-                ? const CircularProgressIndicator(color: Colors.white,)
+                ? const CircularProgressIndicator(
+                    color: Colors.white,
+                  )
                 : const Text("Добавить автора");
           } else {
             return const Text("Добавить автора");

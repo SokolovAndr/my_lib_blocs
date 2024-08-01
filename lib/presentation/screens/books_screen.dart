@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:my_lib_blocs/data/model/book_data_model.dart';
 import 'package:my_lib_blocs/data/model/book_model.dart';
 import 'package:my_lib_blocs/logic/bloc/book_bloc.dart';
 import '../../logic/bloc/book_event.dart';
@@ -63,11 +64,9 @@ class _BooksScreenState extends State<BooksScreen> {
           child: Text(err),
         );
       } else if (state is ReadBookState) {
-        List<DataBook> bookList = state.bookModel.dataBook;
-        var data = state.bookModel;
-
+        List<DataBook> bookList = state.data.books;
         return bookList.isNotEmpty
-            ? _buildListView(data)
+            ? _buildListView(state.data)
             : const Center(child: Text("Список пуст"));
       } else {
         return Container();
@@ -75,140 +74,149 @@ class _BooksScreenState extends State<BooksScreen> {
     });
   }
 
-  Widget _buildListView(BookModel bookModel) {
+  List<String> selectedGenres = [];
+
+  Widget _buildListView(BookDataModel bookData) {
     return RefreshIndicator(
       onRefresh: () async {
         context.read<BookBloc>().add(ReadBookEvent());
+        selectedGenres.clear();
       },
-      child: ListView.builder(
-          itemCount: bookModel.dataBook.length,
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () async {
-                await Navigator.push(context,
-                    MaterialPageRoute(builder: (context) {
-                  return UpdateBookScreen(
-                      id: bookModel.dataBook[index].id,
-                      title: bookModel.dataBook[index].title,
-                      description: bookModel.dataBook[index].description,
-                      authorId: bookModel.dataBook[index].authorId,
-                      genreId: bookModel.dataBook[index].genreId,
-                      imageId: bookModel.dataBook[index].imageId,
-                      autorUi: bookModel.dataBook[index].autorUi,
-                      genreUi: bookModel.dataBook[index].genreUi,
-                      imageUi: bookModel.dataBook[index].imageUi);
-                }));
-              },
+      child: Column(
+        children: [
+          SizedBox(
+              height: 45,
               child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Card(
-                  elevation: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 100,
-                          height: 150,
-                          child: buildImage(bookModel.dataBook[index].imageId),
-
-                          /*Image.network(
-                            bookModel.dataBook[index].imageUi.name,
-                            errorBuilder: (BuildContext context,
-                                Object exception, StackTrace? stackTrace) {
-                              return Center(
-                                child: Image.asset(
-                                  "assets/images/error_icon.png",
-                                  width: 50,
-                                  height: 50,
-                                ),
-                              );
-                            },
-                            loadingBuilder: (BuildContext context, Widget child,
-                                ImageChunkEvent? loadingProgress) {
-                              if (loadingProgress == null) {
-                                return child;
-                              }
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes !=
-                                          null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                      : null,
-                                ),
-                              );
-                            },
-                          ),*/
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: bookData.categories
+                      .map(
+                        (genre) => Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: FilterChip(
+                              selected: selectedGenres.contains(genre),
+                              label: Text(genre),
+                              onSelected: (selected) {
+                                setState(() {
+                                  if (selected) {
+                                    selectedGenres.add(genre);
+                                  } else {
+                                    selectedGenres.remove(genre);
+                                  }
+                                });
+                                context.read<BookBloc>().add(ReadFilterBookEvent(
+                                        currentFilters: selectedGenres,
+                                      ),
+                                    );
+                              }),
                         ),
-                        const SizedBox(width: 25),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                      )
+                      .toList(),
+                ),
+              )),
+          Expanded(
+            child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: bookData.books.length,
+                itemBuilder: (context, index) {
+                  final DataBook book = bookData.books[index];
+
+                  return GestureDetector(
+                    onTap: () async {
+                      await Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return UpdateBookScreen(
+                            id: book.id,
+                            title: book.title,
+                            description: book.description,
+                            authorId: book.authorId,
+                            genreId: book.genreId,
+                            imageId: book.imageId,
+                            autorUi: book.autorUi,
+                            genreUi: book.genreUi,
+                            imageUi: book.imageUi);
+                      }));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                      child: Card(
+                        elevation: 2,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
                             children: [
-                              /*Align(
-                                alignment: Alignment.topLeft,
-                                child: Text(
-                                  bookModel.dataBook[index].id.toString(),
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
+                              SizedBox(
+                                width: 100,
+                                height: 150,
+                                child: buildImage(book.imageId),
+                              ),
+                              const SizedBox(width: 25),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      book.title,
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    const PaddingWidget(),
+                                    Text(
+                                      book.description,
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    const PaddingWidget(),
+                                    Text(
+                                      book.autorUi.name,
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                    const PaddingWidget(),
+                                    Text(
+                                      book.genreUi.name,
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                  ],
                                 ),
-                              ),*/
-                              const PaddingWidget(),
-                              Text(
-                                bookModel.dataBook[index].title,
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w400),
                               ),
-                              const PaddingWidget(),
-                              Text(
-                                bookModel.dataBook[index].description,
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w400),
-                              ),
-                              const PaddingWidget(),
-                              Text(
-                                bookModel.dataBook[index].autorUi.name,
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w400),
-                              ),
-                              const PaddingWidget(),
-                              Text(
-                                bookModel.dataBook[index].genreUi.name,
-                                style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w400),
+                              SizedBox(
+                                width: 30,
+                                height: 30,
+                                child: IconButton(
+                                  onPressed: () async {
+                                    context.read<BookBloc>().add(
+                                        DeleteBookEvent(
+                                            id: book.id.toString()));
+                                    context.read<BookBloc>().add(ReadBookEvent());
+                                  },
+                                  icon: const Icon(Icons.delete_outline),
+                                ),
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(
-                          width: 30,
-                          height: 30,
-                          child: IconButton(
-                            onPressed: () async {
-                              context.read<BookBloc>().add(DeleteBookEvent(
-                                  id: bookModel.dataBook[index].id.toString()));
-                              context.read<BookBloc>().add(ReadBookEvent());
-                            },
-                            icon: const Icon(Icons.delete_outline),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            );
-          }),
+                  );
+                }),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget buildImage(int myIndex) => ClipRRect(
+  Widget buildImage(int index) => ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: CachedNetworkImage(
           key: UniqueKey(),
-          imageUrl: 'http://10.0.2.2:5080/Image/File$myIndex',
+          imageUrl: 'http://10.0.2.2:5080/Image/File$index',
           height: 50,
           width: 50,
           fit: BoxFit.cover,
@@ -224,9 +232,8 @@ class _BooksScreenState extends State<BooksScreen> {
 
   void clearCache() {
     DefaultCacheManager().emptyCache();
-
-    imageCache!.clear();
-    imageCache!.clearLiveImages();
+    imageCache.clear();
+    imageCache.clearLiveImages();
     setState(() {});
   }
 }

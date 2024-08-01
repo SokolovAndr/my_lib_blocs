@@ -1,9 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/material.dart';
 import 'package:my_lib_blocs/data/repository/user_repository.dart';
-
 import '../../data/model/user_model.dart';
-
 part 'user_event.dart';
 part 'user_state.dart';
 

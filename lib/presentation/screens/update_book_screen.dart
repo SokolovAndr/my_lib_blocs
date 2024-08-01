@@ -159,7 +159,7 @@ class _UpdateBookScreenState extends State<UpdateBookScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 hintText: "Изображение",
-                labelText: "Изображение" ?? image.name),
+                labelText: "Изображение"),
             onTap: () async {
               image = await Navigator.push<DataImage>(context,
                   MaterialPageRoute(builder: (context) {
@@ -172,7 +172,6 @@ class _UpdateBookScreenState extends State<UpdateBookScreen> {
           const SizedBox(
             height: 15,
           ),
-          //___________ЗДЕСЬ КОД
           ElevatedButton(
             onPressed: () async {
               if (_bookTitleCtrl.text.isEmpty ||

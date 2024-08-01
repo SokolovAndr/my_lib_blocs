@@ -7,6 +7,13 @@ abstract class BookEvent {}
 
 class ReadBookEvent extends BookEvent {}
 
+class ReadFilterBookEvent extends BookEvent {
+  final List<String> currentFilters;
+  ReadFilterBookEvent({
+    required this.currentFilters,
+  });
+}
+
 class AddBookEvent extends BookEvent {
   final String title;
   final String description;

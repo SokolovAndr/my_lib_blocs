@@ -1,4 +1,4 @@
-import 'package:my_lib_blocs/data/model/book_model.dart';
+import 'package:my_lib_blocs/data/model/book_data_model.dart';
 
 abstract class BookState {}
 
@@ -12,8 +12,10 @@ class LogicErrorState extends BookState {
 class LogicloadingState extends BookState {}
 
 class ReadBookState extends BookState {
-  final BookModel bookModel;
-  ReadBookState({required this.bookModel});
+  final BookDataModel data;
+  ReadBookState({
+    required this.data,
+  });
 }
 
 class AddBookLoading extends BookState {
